@@ -67,7 +67,7 @@ if SERVER then
 
 	-- Load Module List
 	function Deus.ConstructModules()
-		print("[DEUS] Adding Modules...")
+		print("\n\n[DEUS] Adding Modules...\n")
 		for _,v in pairs(Deus.Modlist) do
 			local ModuleName = v
 			print("-----[" .. ModuleName .. "]-----")
@@ -80,7 +80,7 @@ if SERVER then
 		print("\n\n[DEUS] Adding Commands...\n")
 		for k,v in pairs(Deus.Commands) do
 			local Cat = k
-			print("-----[" .. Cat .. "]-----")
+			print("\n-----[" .. Cat .. "]-----")
 			for xk,xv in pairs(Deus.Commands[Cat]) do
 				print("[" .. xk .. "]")
 				concommand.Add("deus." .. k .. "." .. xk, xv)
