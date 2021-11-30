@@ -28,6 +28,9 @@ if SERVER then
 		tLogData.Activator = tPly
 		tLogData.Action = tAct
 		tLogData.Target = tTarget
+		local LogLine = "[DEUS] " .. os.date("[%d/%m/%Y | %H:%M:%S] " , Timestamp) ..  ("CONSOLE" or tLogData.Activator:Nick()) .. " " .. tLogData.Action .. " " .. tLogData.Target:Nick() .. "\n"
+		print(LogLine)
+		file.Append("deus/adam/log.txt", LogLine)
 		DeusLog(tLogData)
 	end
 
@@ -45,7 +48,7 @@ if SERVER then
 	function Deus.RefreshAdmins()
 		local JSONData = file.Read("deus/adam/admins.json")
 		Deus.Admins = util.JSONToTable(JSONData)
-		print("\n\n[DEUS] Loading Admins\n")
+		print("[DEUS] Loading Admins")
 		PrintTable(Deus.Admins)
 	end
 
@@ -64,7 +67,7 @@ if SERVER then
 
 	-- Load Module List
 	function Deus.ConstructModules()
-		print("\n\n[DEUS] Adding Modules...\n")
+		print("[DEUS] Adding Modules...")
 		for _,v in pairs(Deus.Modlist) do
 			local ModuleName = v
 			print("-----[" .. ModuleName .. "]-----")
