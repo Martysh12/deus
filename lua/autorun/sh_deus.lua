@@ -29,7 +29,7 @@ if SERVER then
 		tLogData.Action = tAct
 		tLogData.Target = tTarget
 		local LogLine
-		if isentity(tLogData.Target) then
+		if tLogData.Target:SteamID() != nil then
 			LogLine = "[DEUS] " .. os.date("[%d/%m/%Y | %H:%M:%S] " , Timestamp) ..  ("CONSOLE" or tLogData.Activator:Nick()) .. " " .. tLogData.Action .. " " .. tLogData.Target:Nick() .. "\n"
 		else
 			LogLine = "[DEUS] " .. os.date("[%d/%m/%Y | %H:%M:%S] " , Timestamp) ..  ("CONSOLE" or tLogData.Activator:Nick()) .. " " .. tLogData.Action .. " " .. tLogData.Target .. "\n"
@@ -43,7 +43,7 @@ if SERVER then
 		net.Start("DeusPrint")
 			net.WriteEntity(tLogData.Activator)
 			net.WriteString(tLogData.Action)
-			if tLogData.Target != nil && isentity(tLogData.Target) then
+			if tLogData.Target != nil && tLogData.Target:SteamID() != nil then
 				net.WriteString(tLogData.Target:SteamID())
 			elseif tLogData.Target != nil && !isentity(tLogData.Target) then
 				net.WriteString(tostring(tLogData.Target))
@@ -98,6 +98,14 @@ if SERVER then
 	-- Core Function to retrieve players
 	function Deus.ParseTargetData(sTarget, bMulti)
 		local RET_PLYS = {}
+		local Fallback = {}
+
+		function Fallback:SteamID()
+			return sTarget;
+		end
+		function Fallback:Nick()
+			return sTarget;
+		end
 		for k,v in pairs(player.GetAll()) do
 			if string.find(string.lower(v:Name()), string.lower(sTarget), 0, true) != nil or string.find(string.lower(v:SteamID()), string.lower(sTarget), 0, true) then
 				table.insert(RET_PLYS, v)
@@ -111,7 +119,7 @@ if SERVER then
 		if #RET_PLYS == 1 then
 			return RET_PLYS[1]
 		else
-			return false;
+			return Fallback;
 		end
 	end
 
@@ -147,8 +155,6 @@ if CLIENT then
 		else
 			_Target = player.GetBySteamID(Target):Nick()
 		end
-
-		print(_Target)
 
 		DEUSCOLOR = Color(155,255,255)
 		DEUS_ACTIONCOLOR = Color(255,255,255)
