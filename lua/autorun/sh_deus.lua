@@ -43,8 +43,10 @@ if SERVER then
 		net.Start("DeusPrint")
 			net.WriteEntity(tLogData.Activator)
 			net.WriteString(tLogData.Action)
-			if tLogData.Target != nil then
-				net.WriteEntity(tLogData.Target)
+			if tLogData.Target != nil && isentity(tLogData.Target) then
+				net.WriteString(tLogData.Target:SteamID())
+			elseif tLogData.Target != nil && !isentity(tLogData.Target) then
+				net.WriteString(tostring(tLogData.Target))
 			end
 		net.Broadcast()
 	end
@@ -129,15 +131,30 @@ if CLIENT then
 	net.Receive("DeusPrint",function()
 		local Activator = net.ReadEntity()
 		local Action = net.ReadString()
-		local Target = net.ReadEntity()
+		local Target = net.ReadString()
+
+		local _Activator
+		local _Target
+
+		if Activator:GetClass() != "worldspawn" then
+			_Activator = Activator:Nick()
+		else
+			_Activator = "CONSOLE"
+		end
+
+		if !player.GetBySteamID(Target) then
+			_Target = Target
+		else
+			_Target = player.GetBySteamID(Target):Nick()
+		end
+
+		print(_Target)
+
 		DEUSCOLOR = Color(155,255,255)
 		DEUS_ACTIONCOLOR = Color(255,255,255)
 		DEUS_PLYCOLOR = Color(0,255,0)
-		if Activator:GetClass() != "worldspawn" then
-			chat.AddText(DEUSCOLOR,"[DEUS] ", DEUS_PLYCOLOR, Activator:Nick() .. " ", DEUS_ACTIONCOLOR, Action .. " ", DEUS_PLYCOLOR, Target:Nick() .. " ")
-		else
-			chat.AddText(DEUSCOLOR,"[DEUS] ", DEUS_PLYCOLOR, "CONSOLE" .. " ", DEUS_ACTIONCOLOR, Action .. " ", DEUS_PLYCOLOR, Target:Nick() .. " ")
-		end
+
+		chat.AddText(DEUSCOLOR,"[DEUS] ", DEUS_PLYCOLOR, _Activator .. " ", DEUS_ACTIONCOLOR, Action .. " ", DEUS_PLYCOLOR, _Target .. " ")
 	end)
 
 end
