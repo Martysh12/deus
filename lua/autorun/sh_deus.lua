@@ -155,6 +155,7 @@ if SERVER then
 			return RET_PLYS
 		end
 
+		-- If its only one result, Return the first (and only one)
 		if #RET_PLYS == 1 then
 			return RET_PLYS[1]
 		else
@@ -162,12 +163,14 @@ if SERVER then
 		end
 	end
 
+	-- Initialize Deus
 	function Deus.Init()
 		Deus.RefreshAdmins()
 		Deus.ConstructModules()
 		Deus.Populate()
 	end
 
+	-- Case o' Point
 	Deus.Init()
 
 end
