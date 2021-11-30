@@ -101,7 +101,7 @@ if SERVER then
 		if #RET_PLYS == 1 then
 			return RET_PLYS[1]
 		else
-			return DeusConsole
+			return false;
 		end
 	end
 
