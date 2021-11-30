@@ -28,7 +28,12 @@ if SERVER then
 		tLogData.Activator = tPly
 		tLogData.Action = tAct
 		tLogData.Target = tTarget
-		local LogLine = "[DEUS] " .. os.date("[%d/%m/%Y | %H:%M:%S] " , Timestamp) ..  ("CONSOLE" or tLogData.Activator:Nick()) .. " " .. tLogData.Action .. " " .. tLogData.Target:Nick() .. "\n"
+		local LogLine
+		if isentity(tLogData.Target) then
+			LogLine = "[DEUS] " .. os.date("[%d/%m/%Y | %H:%M:%S] " , Timestamp) ..  ("CONSOLE" or tLogData.Activator:Nick()) .. " " .. tLogData.Action .. " " .. tLogData.Target:Nick() .. "\n"
+		else
+			LogLine = "[DEUS] " .. os.date("[%d/%m/%Y | %H:%M:%S] " , Timestamp) ..  ("CONSOLE" or tLogData.Activator:Nick()) .. " " .. tLogData.Action .. " " .. tLogData.Target .. "\n"
+		end
 		print(LogLine)
 		file.Append("deus/adam/log.txt", LogLine)
 		DeusLog(tLogData)
