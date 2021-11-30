@@ -11,7 +11,6 @@
 ------------------------------------------------------------------*/
 
 if SERVER then
-
 	-- Net MSGs
 	util.AddNetworkString("DeusPrint")
 	-- METATABLES
@@ -19,20 +18,32 @@ if SERVER then
 
 	-- Set up Table
 	Deus = {...}
+	Deus.Console = {...}
 	Deus.Commands = {}
 	Deus.Admins = {}
 	Deus.Modlist = file.Find("deus/modules/*", "LUA")
 
+
+	function Deus.Console:Nick()
+		return "CONSOLE"
+	end
+	function Deus.Console:SteamID()
+		return "CONSOLE"
+	end
+
 	function Deusprint(tPly, tAct, tTarget)
 		local tLogData = {}
 		tLogData.Activator = tPly
+		if tLogData.Activator == nil then
+			tLogData.Activator = Deus.Console
+		end
 		tLogData.Action = tAct
 		tLogData.Target = tTarget
 		local LogLine
 		if tLogData.Target:Nick() != nil then
-			LogLine = "[DEUS] " .. os.date("[%d/%m/%Y | %H:%M:%S] " , Timestamp) ..  ("CONSOLE" or tLogData.Activator:Nick()) .. " " .. tLogData.Action .. " " .. tLogData.Target:Nick() .. "\n"
+			LogLine = "[DEUS] " .. os.date("[%d/%m/%Y | %H:%M:%S] " , Timestamp) ..  (tLogData.Activator:Nick()) .. " " .. tLogData.Action .. " " .. tLogData.Target:Nick() .. "\n"
 		else
-			LogLine = "[DEUS] " .. os.date("[%d/%m/%Y | %H:%M:%S] " , Timestamp) ..  ("CONSOLE" or tLogData.Activator:Nick()) .. " " .. tLogData.Action .. " " .. tLogData.Target .. "\n"
+			LogLine = "[DEUS] " .. os.date("[%d/%m/%Y | %H:%M:%S] " , Timestamp) ..  (tLogData.Activator:Nick()) .. " " .. tLogData.Action .. " " .. tLogData.Target .. "\n"
 		end
 		print(LogLine)
 		file.Append("deus/adam/log.txt", LogLine)
