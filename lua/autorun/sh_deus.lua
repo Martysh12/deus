@@ -101,7 +101,7 @@ if SERVER then
 		if #RET_PLYS == 1 then
 			return RET_PLYS[1]
 		else
-			return false
+			return DeusConsole
 		end
 	end
 
@@ -116,6 +116,8 @@ if SERVER then
 end
 
 if CLIENT then
+
+	-- DeusPrint | Logs into Chat
 	net.Receive("DeusPrint",function()
 		local Activator = net.ReadEntity()
 		local Action = net.ReadString()
@@ -123,6 +125,11 @@ if CLIENT then
 		DEUSCOLOR = Color(155,255,255)
 		DEUS_ACTIONCOLOR = Color(255,255,255)
 		DEUS_PLYCOLOR = Color(0,255,0)
-		chat.AddText(DEUSCOLOR,"[DEUS] ", DEUS_PLYCOLOR, Activator:Nick() .. " ", DEUS_ACTIONCOLOR, Action .. " ", DEUS_PLYCOLOR, Target:Nick() .. " ")
+		if Activator:GetClass() != "worldspawn" then
+			chat.AddText(DEUSCOLOR,"[DEUS] ", DEUS_PLYCOLOR, Activator:Nick() .. " ", DEUS_ACTIONCOLOR, Action .. " ", DEUS_PLYCOLOR, Target:Nick() .. " ")
+		else
+			chat.AddText(DEUSCOLOR,"[DEUS] ", DEUS_PLYCOLOR, "CONSOLE" .. " ", DEUS_ACTIONCOLOR, Action .. " ", DEUS_PLYCOLOR, Target:Nick() .. " ")
+		end
 	end)
+
 end
