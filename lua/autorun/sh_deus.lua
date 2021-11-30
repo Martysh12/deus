@@ -23,7 +23,7 @@ if SERVER then
 	Deus.Admins = {}
 	Deus.Modlist = file.Find("deus/modules/*", "LUA")
 
-
+	-- Fallback Console Activator
 	function Deus.Console:Nick()
 		return "CONSOLE"
 	end
@@ -31,26 +31,44 @@ if SERVER then
 		return "CONSOLE"
 	end
 
+	-- Logger Stage 1
 	function Deusprint(tPly, tAct, tTarget)
+
+		-- Build LogData Table
 		local tLogData = {}
+
+		-- Activator
 		tLogData.Activator = tPly
+
 		if tLogData.Activator == nil then
 			tLogData.Activator = Deus.Console
 		end
+
+		-- Action and Target
 		tLogData.Action = tAct
 		tLogData.Target = tTarget
+
+		-- Introduce Logline Var
 		local LogLine
+
+		-- If Target has a nick, its a player, if not, its something else, so we log a string!
 		if tLogData.Target:Nick() != nil then
 			LogLine = "[DEUS] " .. os.date("[%d/%m/%Y | %H:%M:%S] " , Timestamp) ..  (tLogData.Activator:Nick()) .. " " .. tLogData.Action .. " " .. tLogData.Target:Nick() .. "\n"
 		else
 			LogLine = "[DEUS] " .. os.date("[%d/%m/%Y | %H:%M:%S] " , Timestamp) ..  (tLogData.Activator:Nick()) .. " " .. tLogData.Action .. " " .. tLogData.Target .. "\n"
 		end
+
+		-- Log Server, File and Client
 		print(LogLine)
 		file.Append("deus/adam/log.txt", LogLine)
 		DeusLog(tLogData)
+
 	end
 
+	-- Logger Stage 2
 	function DeusLog(tLogData)
+
+		-- Send NetMSG and Broadcast it
 		net.Start("DeusPrint")
 			net.WriteEntity(tLogData.Activator)
 			net.WriteString(tLogData.Action)
@@ -60,6 +78,7 @@ if SERVER then
 				net.WriteString(tostring(tLogData.Target))
 			end
 		net.Broadcast()
+
 	end
 
 	-- Load and Refresh Admin Adam
@@ -108,9 +127,13 @@ if SERVER then
 
 	-- Core Function to retrieve players
 	function Deus.ParseTargetData(sTarget, bMulti)
+
 		local RET_PLYS = {}
+
+		-- Fallback if its not a player, so we fake it
 		local Fallback = {}
 
+		-- Case o' point.
 		function Fallback:SteamID()
 			return sTarget;
 		end
@@ -118,6 +141,7 @@ if SERVER then
 			return sTarget;
 		end
 
+		-- Actual Player
 		if isstring(sTarget) then
 			for k,v in pairs(player.GetAll()) do
 				if string.find(string.lower(v:Name()), string.lower(sTarget), 0, true) != nil or string.find(string.lower(v:SteamID()), string.lower(sTarget), 0, true) then
@@ -126,6 +150,7 @@ if SERVER then
 			end
 		end
 
+		-- Multiple Players
 		if bMulti then
 			return RET_PLYS
 		end
