@@ -12,81 +12,117 @@
 
 if SERVER then
 
--- METATABLES
-DeusMetaPly = FindMetaTable("Player")
+	-- Net MSGs
+	util.AddNetworkString("DeusPrint")
+	-- METATABLES
+	DeusMetaPly = FindMetaTable("Player")
 
--- Set up Table
-Deus = {...}
-Deus.Commands = {}
-Deus.Admins = {}
-Deus.Modlist = file.Find("deus/modules/*", "LUA")
+	-- Set up Table
+	Deus = {...}
+	Deus.Commands = {}
+	Deus.Admins = {}
+	Deus.Modlist = file.Find("deus/modules/*", "LUA")
 
--- Load and Refresh Admin Adam
-function Deus.RefreshAdmins()
-	local JSONData = file.Read("deus/adam/admins.json")
-	Deus.Admins = util.JSONToTable(JSONData)
-	print("\n\n[DEUS] Loading Admins\n")
-	PrintTable(Deus.Admins)
-end
-
--- Status Property
-function DeusMetaPly:IsDeus()
-	return Deus.Admins[self:SteamID()] != nil
-end
-
--- CORE SHARED
-function Deus.AddCommand(sCategory, sName, funcCallback)
-	if Deus.Commands[sCategory] == nil then
-		Deus.Commands[sCategory] = {}
+	function Deusprint(tPly, tAct, tTarget)
+		local tLogData = {}
+		tLogData.Activator = tPly
+		tLogData.Action = tAct
+		tLogData.Target = tTarget
+		DeusLog(tLogData)
 	end
-	Deus.Commands[sCategory][sName] = funcCallback
-end
 
--- Load Module List
-function Deus.ConstructModules()
-	print("\n\n[DEUS] Adding Modules...\n")
-	for _,v in pairs(Deus.Modlist) do
-		local ModuleName = v
-		print("-----[" .. ModuleName .. "]-----")
-		include("deus/modules/" .. ModuleName)
+	function DeusLog(tLogData)
+		net.Start("DeusPrint")
+			net.WriteEntity(tLogData.Activator)
+			net.WriteString(tLogData.Action)
+			if tLogData.Target != nil then
+				net.WriteEntity(tLogData.Target)
+			end
+		net.Broadcast()
 	end
-end
 
--- Populate commands ingame
-function Deus.Populate()
-	print("\n\n[DEUS] Adding Commands...\n")
-	for k,v in pairs(Deus.Commands) do
-		local Cat = k
-		print("-----[" .. Cat .. "]-----")
-		for xk,xv in pairs(Deus.Commands[Cat]) do
-			print("[" .. xk .. "]")
-			concommand.Add("deus." .. k .. "." .. xk, xv)
+	-- Load and Refresh Admin Adam
+	function Deus.RefreshAdmins()
+		local JSONData = file.Read("deus/adam/admins.json")
+		Deus.Admins = util.JSONToTable(JSONData)
+		print("\n\n[DEUS] Loading Admins\n")
+		PrintTable(Deus.Admins)
+	end
+
+	-- Status Property
+	function DeusMetaPly:IsDeus()
+		return Deus.Admins[self:SteamID()] != nil
+	end
+
+	-- CORE SHARED
+	function Deus.AddCommand(sCategory, sName, funcCallback)
+		if Deus.Commands[sCategory] == nil then
+			Deus.Commands[sCategory] = {}
+		end
+		Deus.Commands[sCategory][sName] = funcCallback
+	end
+
+	-- Load Module List
+	function Deus.ConstructModules()
+		print("\n\n[DEUS] Adding Modules...\n")
+		for _,v in pairs(Deus.Modlist) do
+			local ModuleName = v
+			print("-----[" .. ModuleName .. "]-----")
+			include("deus/modules/" .. ModuleName)
 		end
 	end
-end
 
--- Core Function to retrieve players
-function Deus.ParseTargetData(sTarget, bMulti)
-	local RET_PLYS = {}
-	for k,v in pairs(player.GetAll()) do
-		if string.find(string.lower(v:Name()), string.lower(sTarget), 0, true) != nil or string.find(string.lower(v:SteamID()), string.lower(sTarget), 0, true) then
-			table.insert(RET_PLYS, v)
+	-- Populate commands ingame
+	function Deus.Populate()
+		print("\n\n[DEUS] Adding Commands...\n")
+		for k,v in pairs(Deus.Commands) do
+			local Cat = k
+			print("-----[" .. Cat .. "]-----")
+			for xk,xv in pairs(Deus.Commands[Cat]) do
+				print("[" .. xk .. "]")
+				concommand.Add("deus." .. k .. "." .. xk, xv)
+			end
 		end
 	end
 
-	if bMulti then
-		return RET_PLYS
+	-- Core Function to retrieve players
+	function Deus.ParseTargetData(sTarget, bMulti)
+		local RET_PLYS = {}
+		for k,v in pairs(player.GetAll()) do
+			if string.find(string.lower(v:Name()), string.lower(sTarget), 0, true) != nil or string.find(string.lower(v:SteamID()), string.lower(sTarget), 0, true) then
+				table.insert(RET_PLYS, v)
+			end
+		end
+
+		if bMulti then
+			return RET_PLYS
+		end
+
+		if #RET_PLYS == 1 then
+			return RET_PLYS[1]
+		else
+			return false
+		end
 	end
 
-	if #RET_PLYS == 1 then
-		return RET_PLYS[1]
-	else
-		return false
+	function Deus.Init()
+		Deus.RefreshAdmins()
+		Deus.ConstructModules()
+		Deus.Populate()
 	end
+
+	Deus.Init()
+
 end
 
-Deus.RefreshAdmins()
-Deus.ConstructModules()
-Deus.Populate()
-
+if CLIENT then
+	net.Receive("DeusPrint",function()
+		local Activator = net.ReadEntity()
+		local Action = net.ReadString()
+		local Target = net.ReadEntity()
+		DEUSCOLOR = Color(155,255,255)
+		DEUS_ACTIONCOLOR = Color(255,255,255)
+		DEUS_PLYCOLOR = Color(0,255,0)
+		chat.AddText(DEUSCOLOR,"[DEUS] ", DEUS_PLYCOLOR, Activator:Nick() .. " ", DEUS_ACTIONCOLOR, Action .. " ", DEUS_PLYCOLOR, Target:Nick() .. " ")
+	end)
 end
