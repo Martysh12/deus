@@ -3,10 +3,10 @@
 -- Your Hosts: ["Runic"]
 
 function DeusArrakisWinRound(sCaller, Team)
-	local _Team = tonumber(Team)
-	if _Team != 1 && _Team != 2 then return end
-	WinRound(_Team)
-	Deusprint(sCaller, "ended round in favor of Team ", Team)
+	local _Team = Deus.ParseTargetData(tonumber(Team))
+	if Team != "1" && Team != "2" then return end
+	--WinRound(_Team:Nick())
+	Deusprint(sCaller, "ended round in favor of Team ", _Team)
 end
 
 Deus.AddCommand("arrakis", "win", function(ply, cmd, args)

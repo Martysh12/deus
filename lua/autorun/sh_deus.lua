@@ -29,7 +29,7 @@ if SERVER then
 		tLogData.Action = tAct
 		tLogData.Target = tTarget
 		local LogLine
-		if tLogData.Target:SteamID() != nil then
+		if tLogData.Target:Nick() != nil then
 			LogLine = "[DEUS] " .. os.date("[%d/%m/%Y | %H:%M:%S] " , Timestamp) ..  ("CONSOLE" or tLogData.Activator:Nick()) .. " " .. tLogData.Action .. " " .. tLogData.Target:Nick() .. "\n"
 		else
 			LogLine = "[DEUS] " .. os.date("[%d/%m/%Y | %H:%M:%S] " , Timestamp) ..  ("CONSOLE" or tLogData.Activator:Nick()) .. " " .. tLogData.Action .. " " .. tLogData.Target .. "\n"
@@ -106,9 +106,12 @@ if SERVER then
 		function Fallback:Nick()
 			return sTarget;
 		end
-		for k,v in pairs(player.GetAll()) do
-			if string.find(string.lower(v:Name()), string.lower(sTarget), 0, true) != nil or string.find(string.lower(v:SteamID()), string.lower(sTarget), 0, true) then
-				table.insert(RET_PLYS, v)
+
+		if isstring(sTarget) then
+			for k,v in pairs(player.GetAll()) do
+				if string.find(string.lower(v:Name()), string.lower(sTarget), 0, true) != nil or string.find(string.lower(v:SteamID()), string.lower(sTarget), 0, true) then
+					table.insert(RET_PLYS, v)
+				end
 			end
 		end
 
