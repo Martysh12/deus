@@ -2,13 +2,10 @@
 -- (c) 2021 Zeitgeist Studios
 -- Your Hosts: ["Runic"]
 
--- deus.fun.slay | Purpose: Destruction
+-- deus.fun.ignite | Purpose: Destruction
 function DeusIgnite(sCaller, Target, iSeconds)
-	-- Parse Target
 	local Parsed = Deus.ParseTargetData(Target)
-
-	Parsed:Ignite()
-
+	Parsed:Ignite(tonumber(iSeconds))
 	Deusprint(sCaller, "ignited(" .. iSeconds .. ")", Parsed)
 end
 

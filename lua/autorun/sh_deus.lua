@@ -1,7 +1,7 @@
 /*------------------------------------------------------------------
---- --------------- DEUS ADMIN MOD BY RUNIC --------------------- --
+--- -------------- DEUS ADMIN MOD BY RUNIC  --------------------- --
 --- -------------- USAGE: MANAGING ARRAKIS  --------------------- --
---- ----------------------------------------------------------------
+--- ------------------------------------------------------------- --
 ---							INFO:								  --
 ---	------------------------------------------------------------- --
 ---		adam files are serverside configs						  --
@@ -40,7 +40,7 @@ if SERVER then
 		-- Activator
 		tLogData.Activator = tPly
 
-		if tLogData.Activator == nil then
+		if tLogData.Activator == nil or tLogData.Activator == "" then
 			tLogData.Activator = Deus.Console
 		end
 
@@ -81,6 +81,9 @@ if SERVER then
 
 	-- Load and Refresh Admin Adam
 	function Deus.RefreshAdmins()
+		if !file.Exists("deus/adam/admins.json","DATA") then
+			file.Write("deus/adam/admins.json", util.TableToJSON(Deus.Admins))
+		end
 		local JSONData = file.Read("deus/adam/admins.json")
 		Deus.Admins = util.JSONToTable(JSONData)
 		print("\n\n[DEUS] Loading Admins\n")
