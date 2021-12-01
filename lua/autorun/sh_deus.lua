@@ -96,11 +96,13 @@ if SERVER then
 	end
 
 	-- Command Register
-	function Deus.AddCommand(sCategory, sName, funcCallback)
+	function Deus.AddCommand(sCategory, sName, sDesc, funcCallback)
 		if Deus.Commands[sCategory] == nil then
 			Deus.Commands[sCategory] = {}
 		end
-		Deus.Commands[sCategory][sName] = funcCallback
+		Deus.Commands[sCategory][sName] = {}
+		Deus.Commands[sCategory][sName]["1"] = sDesc
+		Deus.Commands[sCategory][sName]["2"] = funcCallback
 	end
 
 	-- Load Module List
@@ -108,20 +110,20 @@ if SERVER then
 		print("\n\n[DEUS] Adding Modules...\n")
 		for _,v in pairs(Deus.Modlist) do
 			local ModuleName = v
-			print("-----[" .. ModuleName .. "]-----")
+			print("- [" .. ModuleName .. "]")
 			include("deus/modules/" .. ModuleName)
 		end
 	end
 
 	-- Populate commands ingame
 	function Deus.Populate()
-		print("\n\n[DEUS] Adding Commands...\n")
+		print("\n\n[DEUS] Adding Commands...")
 		for k,v in pairs(Deus.Commands) do
 			local Cat = k
-			print("\n-----[" .. Cat .. "]-----")
+			print("\n-----[deus." .. Cat .. "]-----")
 			for xk,xv in pairs(Deus.Commands[Cat]) do
-				print("[" .. xk .. "]")
-				concommand.Add("deus." .. k .. "." .. xk, xv)
+				print("[" .. xk .. "]\t-\t" .. xv["1"] .. "")
+				concommand.Add("deus." .. k .. "." .. xk, xv["2"])
 			end
 		end
 	end

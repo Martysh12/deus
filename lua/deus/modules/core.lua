@@ -3,7 +3,7 @@
 -- Your Hosts: ["Runic"]
 
 -- Deus.core.refresh | Purpose: Loads and refreshes everything
-Deus.AddCommand("core", "refresh", function(ply, cmd, args)
+Deus.AddCommand("core", "refresh", "Refreshes Deus", function(ply, cmd, args)
 	if !ply:IsDeus() then return end
 	Deus.Init()
 end)
@@ -23,7 +23,7 @@ function DeusAddAdmin(sCaller, Target)
 	Deus.RefreshAdmins()
 end
 
-Deus.AddCommand("core", "add", function(ply, cmd, args)
+Deus.AddCommand("core", "add", "Adds Deus [Player or SteamID]", function(ply, cmd, args)
 	if !ply:IsDeus() then return end
 	DeusAddAdmin(ply, args[1])
 end)
@@ -40,7 +40,7 @@ function DeusRmAdmin(sCaller, Target)
 	Deus.RefreshAdmins()
 end
 
-Deus.AddCommand("core", "rm", function(ply, cmd, args)
+Deus.AddCommand("core", "rm", "Removes Deus [Player or SteamID]", function(ply, cmd, args)
 	if !ply:IsDeus() then return end
 	DeusRmAdmin(ply, args[1])
 end)
@@ -52,7 +52,7 @@ function DeusStatus(sCaller, Target)
 	print([[[DEUS] Deus status of Player < ]] .. Parsed:Nick() .. [[ > is < ]] .. tostring(Parsed:IsDeus()) .. [[ >]])
 end
 
-Deus.AddCommand("core", "status", function(ply, cmd, args)
+Deus.AddCommand("core", "status", "Shows IsDeus [Player]", function(ply, cmd, args)
 	if !ply:IsDeus() then return end
 	DeusStatus(ply, args[1])
 end)

@@ -23,7 +23,7 @@ function DeusSlay(sCaller, Target)
 	Deusprint(sCaller, "slayed", Parsed)
 end
 
-Deus.AddCommand("user", "slay", function(ply, cmd, args)
+Deus.AddCommand("user", "slay", "Slay [Player]", function(ply, cmd, args)
 	if !ply:IsDeus() then return end
 	DeusSlay(ply, args[1])
 end)
@@ -36,7 +36,7 @@ function DeusKick(sCaller, Target, sReason)
 	Deusprint(sCaller, [[kick ("]] .. sReason .. [[")]], Parsed)
 end
 
-Deus.AddCommand("user", "kick", function(ply, cmd, args)
+Deus.AddCommand("user", "kick", "Kicks Ply [Reason]", function(ply, cmd, args)
 	if !ply:IsDeus() then return end
 	DeusKick(ply, args[1], args[2])
 end)
@@ -50,7 +50,7 @@ function DeusBan(sCaller, Target, sMinutes, sReason)
 	Deusprint(sCaller, [[ban (]] .. tonumber(sMinutes) .. [[ minutes) (]] .. sReason .. [[)]], Parsed)
 end
 
-Deus.AddCommand("user", "ban", function(ply, cmd, args)
+Deus.AddCommand("user", "ban", "Bans Ply [Minutes, Reason]", function(ply, cmd, args)
 	if !ply:IsDeus() then return end
 	DeusBan(ply, args[1], args[2], args[3])
 end)

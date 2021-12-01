@@ -10,7 +10,7 @@ function DeusIgnite(sCaller, Target, iSeconds)
 	Deusprint(sCaller, "ignited(" .. iSeconds .. ")", Parsed)
 end
 
-Deus.AddCommand("fun", "ignite", function(ply, cmd, args)
+Deus.AddCommand("fun", "ignite", "Ignites Ply [Player]", function(ply, cmd, args)
 	if !ply:IsDeus() then return end
 	DeusIgnite(ply, args[1], args[2])
 end)
@@ -35,7 +35,7 @@ function DeusSplode(sCaller, Target)
 end
 
 
-Deus.AddCommand("fun", "explode", function(ply, cmd, args)
+Deus.AddCommand("fun", "explode", "Explodes Ply [Player]", function(ply, cmd, args)
 	if !ply:IsDeus() then return end
 	DeusSplode(ply, args[1])
 end)

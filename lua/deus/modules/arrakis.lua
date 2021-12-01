@@ -9,7 +9,7 @@ function DeusArrakisWinRound(sCaller, Team)
 	Deusprint(sCaller, "ended round in favor of Team ", _Team)
 end
 
-Deus.AddCommand("arrakis", "win", function(ply, cmd, args)
+Deus.AddCommand("arrakis", "win", "Wins Round for Team", function(ply, cmd, args)
 	if !ply:IsDeus() then return end
 	DeusArrakisWinRound(ply, args[1])
 end)
