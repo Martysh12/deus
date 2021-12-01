@@ -67,7 +67,6 @@ if SERVER then
 
 	-- Logger Stage 2
 	function DeusLog(tLogData)
-
 		-- Send NetMSG and Broadcast it
 		net.Start("DeusPrint")
 			net.WriteEntity(tLogData.Activator)
@@ -78,14 +77,13 @@ if SERVER then
 				net.WriteString(tostring(tLogData.Target))
 			end
 		net.Broadcast()
-
 	end
 
 	-- Load and Refresh Admin Adam
 	function Deus.RefreshAdmins()
 		local JSONData = file.Read("deus/adam/admins.json")
 		Deus.Admins = util.JSONToTable(JSONData)
-		print("[DEUS] Loading Admins")
+		print("\n\n[DEUS] Loading Admins\n")
 		PrintTable(Deus.Admins)
 	end
 
@@ -94,7 +92,7 @@ if SERVER then
 		return Deus.Admins[self:SteamID()] != nil
 	end
 
-	-- CORE SHARED
+	-- Command Register
 	function Deus.AddCommand(sCategory, sName, funcCallback)
 		if Deus.Commands[sCategory] == nil then
 			Deus.Commands[sCategory] = {}
