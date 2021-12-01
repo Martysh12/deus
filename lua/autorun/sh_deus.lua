@@ -31,6 +31,9 @@ if SERVER then
 	function Deus.Console:SteamID()
 		return "CONSOLE"
 	end
+	function Deus.Console:IsDeus()
+		return true
+	end
 
 	-- Logger Stage 1
 	function Deusprint(tPly, tAct, tTarget)

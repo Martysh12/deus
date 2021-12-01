@@ -24,6 +24,7 @@ function DeusSlay(sCaller, Target)
 end
 
 Deus.AddCommand("user", "slay", "Slay [Player]", function(ply, cmd, args)
+	if !ply:IsValid() then ply = Deus.Console end
 	if !ply:IsDeus() then return end
 	DeusSlay(ply, args[1])
 end)
@@ -37,6 +38,7 @@ function DeusKick(sCaller, Target, sReason)
 end
 
 Deus.AddCommand("user", "kick", "Kicks Ply [Reason]", function(ply, cmd, args)
+	if !ply:IsValid() then ply = Deus.Console end
 	if !ply:IsDeus() then return end
 	DeusKick(ply, args[1], args[2])
 end)
@@ -51,6 +53,7 @@ function DeusBan(sCaller, Target, sMinutes, sReason)
 end
 
 Deus.AddCommand("user", "ban", "Bans [Ply/SteamID, Minutes, Reason]", function(ply, cmd, args)
+	if !ply:IsValid() then ply = Deus.Console end
 	if !ply:IsDeus() then return end
 	DeusBan(ply, args[1], args[2], args[3])
 end)
@@ -63,6 +66,7 @@ function DeusUnBan(sCaller, Target)
 end
 
 Deus.AddCommand("user", "unban", "Unbans [Ply/SteamID]", function(ply, cmd, args)
+	if !ply:IsValid() then ply = Deus.Console end
 	if !ply:IsDeus() then return end
 	DeusUnBan(ply, args[1])
 end)

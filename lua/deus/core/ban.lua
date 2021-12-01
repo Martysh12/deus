@@ -27,7 +27,7 @@ end
 function Deus.Orion.Ban(eCaller, ePly, iTime, sReason)
 
 	-- If the Ban already exists, do not do anything.
-	if table.HasValue(Deus.Orion.Bans, ePly:SteamID()) then return end
+	if Deus.Orion.Bans[ePly:SteamID()] != nil then return end
 
 	-- Else, add to Bans.
 	Deus.Orion.Bans[ePly:SteamID()] = {}
@@ -41,6 +41,7 @@ function Deus.Orion.Ban(eCaller, ePly, iTime, sReason)
 	Deus.Orion.Bans[ePly:SteamID()]["baninfo"] = {}
 	Deus.Orion.Bans[ePly:SteamID()]["baninfo"]["when"] = os.date("[%d/%m/%Y | %H:%M:%S] " , Timestamp)
 	Deus.Orion.Bans[ePly:SteamID()]["baninfo"]["time"] = tonumber(iTime)
+	Deus.Orion.Bans[ePly:SteamID()]["baninfo"]["reason"] = tostring(sReason)
 
 	-- Write it to the Ban Adam.
 	file.Write("deus/adam/bans.json", util.TableToJSON(Deus.Orion.Bans))
@@ -54,7 +55,7 @@ end
 function Deus.Orion.RMBan(eCaller, ePly)
 
 	-- If the ban does NOT exist, do not do anything.
-	if not table.HasValue(Deus.Orion.Bans, ePly:SteamID()) then return end
+	if Deus.Orion.Bans[ePly:SteamID()] == nil then return end
 
 	-- Else, remove ban.
 	Deus.Orion.Bans[ePly:SteamID()] = nil
@@ -74,12 +75,13 @@ function Deus.Orion.chkbn(steamid64, ip, password, clpassword, name)
 	-- Feed Bandata into variable.
 	local bdat = Deus.Orion.Bans[steamid]
 
+	print(bdat)
 	-- Is the variable valid?
 	if not bdat then return end
-	if not bdat[banner] and not bdat[reason] then return end
-
+	if not bdat["banner"] and not bdat["baninfo"] then return end
+	print(1)
 	-- Returning false and thus returning you to menu. Hey hey, Goodbye!
-	local message = "[DEUS] Banned " .. bdat["baninfo"]["when"] .. " by " .. bdat["banner"]["name"] .. "(" .. bdat["banner"]["ID"] .. ").\n\nReason:\n" .. bdat[reason]
+	local message = "[DEUS] Banned " .. bdat["baninfo"]["when"] .. " by " .. bdat["banner"]["name"] .. " (" .. bdat["banner"]["ID"] .. ").\n\nReason:\n" .. bdat["baninfo"]["reason"]
 	return false, message
 
 end

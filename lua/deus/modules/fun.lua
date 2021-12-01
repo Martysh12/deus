@@ -11,6 +11,7 @@ function DeusIgnite(sCaller, Target, iSeconds)
 end
 
 Deus.AddCommand("fun", "ignite", "Ignites Ply [Player]", function(ply, cmd, args)
+	if !ply:IsValid() then ply = Deus.Console end
 	if !ply:IsDeus() then return end
 	DeusIgnite(ply, args[1], args[2])
 end)
@@ -36,6 +37,7 @@ end
 
 
 Deus.AddCommand("fun", "explode", "Explodes Ply [Player]", function(ply, cmd, args)
+	if !ply:IsValid() then ply = Deus.Console end
 	if !ply:IsDeus() then return end
 	DeusSplode(ply, args[1])
 end)
