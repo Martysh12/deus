@@ -127,7 +127,7 @@ if SERVER then
 	end
 
 	-- Core Function to retrieve players
-	function Deus.ParseTargetData(sTarget, bMulti)
+	function Deus.ParseTargetData(sTarget, bMulti, bSID)
 
 		local RET_PLYS = {}
 
@@ -160,7 +160,11 @@ if SERVER then
 		if #RET_PLYS == 1 then
 			return RET_PLYS[1]
 		else
-			return Fallback;
+			if bSID then
+				return Fallback;
+			else
+				return;
+			end
 		end
 	end
 

@@ -4,7 +4,7 @@
 
 -- deus.fun.ignite | Purpose: Destruction
 function DeusIgnite(sCaller, Target, iSeconds)
-	local Parsed = Deus.ParseTargetData(Target)
+	local Parsed = Deus.ParseTargetData(Target,false)
 	Parsed:Ignite(tonumber(iSeconds))
 	Deusprint(sCaller, "ignited(" .. iSeconds .. ")", Parsed)
 end

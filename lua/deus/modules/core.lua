@@ -11,7 +11,7 @@ end)
 -- deus.core.add | Purpose: Adds an Admin to admins
 function DeusAddAdmin(sCaller, Target)
 	-- Parse Target
-	local Parsed = Deus.ParseTargetData(Target)
+	local Parsed = Deus.ParseTargetData(Target,false,true)
 
 	-- If the Admin already exists...
 	if table.HasValue(Deus.Admins, Parsed:SteamID()) then return end
@@ -31,7 +31,7 @@ end)
 -- deus.core.rm | Purpose: Removes an Admin
 function DeusRmAdmin(sCaller, Target)
 	-- Parse Target
-	local Parsed = Deus.ParseTargetData(Target)
+	local Parsed = Deus.ParseTargetData(Target,false,true)
 
 	-- remove
 	Deus.Admins[Parsed:SteamID()] = nil
@@ -48,7 +48,7 @@ end)
 -- deus.core.status | Purpose: Get Status of Player
 function DeusStatus(sCaller, Target)
 	-- Parse Target
-	local Parsed = Deus.ParseTargetData(Target)
+	local Parsed = Deus.ParseTargetData(Target,false)
 	print([[[DEUS] Deus status of Player < ]] .. Parsed:Nick() .. [[ > is < ]] .. tostring(Parsed:IsDeus()) .. [[ >]])
 end
 
