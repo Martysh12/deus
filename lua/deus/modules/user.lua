@@ -4,13 +4,21 @@
 
 -- deus.user.slay | Purpose: Destruction
 function DeusSlay(sCaller, Target)
+	local Snds = {
+		"ambient/energy/zap8.wav",
+		"ambient/energy/zap7.wav",
+		"ambient/energy/zap6.wav"
+	}
 	local Parsed = Deus.ParseTargetData(Target,false)
+	local Pos = Parsed:GetPos()
+	Parsed:Spawn()
+	Parsed:SetPos(Pos)
 	local d = DamageInfo()
 	d:SetDamage(Parsed:Health())
-	d:SetAttacker(sCaller)
-	d:SetInflictor(sCaller)
+	d:SetAttacker(Parsed)
+	d:SetInflictor(Parsed)
 	d:SetDamageType(DMG_DISSOLVE)
-	Parsed:GodDisable()
+	Parsed:EmitSound(Snds[math.random(#Snds)], 75,  math.random(80,120), 1, CHAN_AUTO)
 	Parsed:TakeDamageInfo(d)
 	Deusprint(sCaller, "slayed", Parsed)
 end
