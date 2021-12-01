@@ -3,16 +3,16 @@
 -- Your Hosts: ["Runic"]
 
 -- deus.fun.slay | Purpose: Destruction
-function DeusSlay(sCaller, Target)
+function DeusIgnite(sCaller, Target, iSeconds)
 	-- Parse Target
 	local Parsed = Deus.ParseTargetData(Target)
 
-	Parsed:Kill()
+	Parsed:Ignite()
 
-	Deusprint(sCaller, "slayed", Parsed)
+	Deusprint(sCaller, "ignited(" .. iSeconds .. ")", Parsed)
 end
 
-Deus.AddCommand("fun", "slay", function(ply, cmd, args)
+Deus.AddCommand("fun", "ignite", function(ply, cmd, args)
 	if !ply:IsDeus() then return end
-	DeusSlay(ply, args[1])
+	DeusIgnite(ply, args[1], args[2])
 end)
