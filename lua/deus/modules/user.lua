@@ -44,13 +44,25 @@ end)
 -- deus.user.ban | Purpose: Ban hoes, hang with bros?
 function DeusBan(sCaller, Target, sMinutes, sReason)
 	if sReason == nil then sReason = "Undocumented Deus Ban" end
-	local Parsed = Deus.ParseTargetData(Target,false)
-	Parsed:Ban(tonumber(sMinutes),false)
+	local Parsed = Deus.ParseTargetData(Target,false,true)
+	Deus.Orion.Ban(sCaller, Parsed, sMinutes, sReason)
 	Parsed:Kick(sReason)
 	Deusprint(sCaller, [[ban (]] .. tonumber(sMinutes) .. [[ minutes) (]] .. sReason .. [[)]], Parsed)
 end
 
-Deus.AddCommand("user", "ban", "Bans Ply [Minutes, Reason]", function(ply, cmd, args)
+Deus.AddCommand("user", "ban", "Bans [Ply/SteamID, Minutes, Reason]", function(ply, cmd, args)
 	if !ply:IsDeus() then return end
 	DeusBan(ply, args[1], args[2], args[3])
+end)
+
+-- deus.user.unban | Purpose: Ban hoes, hang with bros?
+function DeusUnBan(sCaller, Target)
+	local Parsed = Deus.ParseTargetData(Target,false,true)
+	Deus.Orion.RMBan(sCaller, Parsed)
+	Deusprint(sCaller, [[unban]], Parsed)
+end
+
+Deus.AddCommand("user", "unban", "Unbans [Ply/SteamID]", function(ply, cmd, args)
+	if !ply:IsDeus() then return end
+	DeusUnBan(ply, args[1])
 end)

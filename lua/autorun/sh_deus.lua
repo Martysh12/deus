@@ -13,6 +13,7 @@
 if SERVER then
 	-- Net MSGs
 	util.AddNetworkString("DeusPrint")
+
 	-- METATABLES
 	DeusMetaPly = FindMetaTable("Player")
 
@@ -33,7 +34,6 @@ if SERVER then
 
 	-- Logger Stage 1
 	function Deusprint(tPly, tAct, tTarget)
-
 		-- Build LogData Table
 		local tLogData = {}
 
@@ -62,7 +62,6 @@ if SERVER then
 		print(LogLine)
 		file.Append("deus/adam/log.txt", LogLine)
 		DeusLog(tLogData)
-
 	end
 
 	-- Logger Stage 2
@@ -161,6 +160,7 @@ if SERVER then
 		-- If its only one result, Return the first (and only one)
 		if #RET_PLYS == 1 then
 			return RET_PLYS[1]
+		-- If No one is found, it is a STEAMID
 		else
 			if bSID then
 				return Fallback;
@@ -172,9 +172,11 @@ if SERVER then
 
 	-- Initialize Deus
 	function Deus.Init()
+		include("deus/core/ban.lua")
 		Deus.RefreshAdmins()
 		Deus.ConstructModules()
 		Deus.Populate()
+		Deus.Orion.Refresh()
 	end
 
 	-- Case o' Point
