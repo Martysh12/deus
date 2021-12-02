@@ -19,7 +19,7 @@ function Deus.Orion.Refresh()
 	Deus.Orion.Bans = util.JSONToTable(JSONData)
 
 	-- DEBUG: Print the Table.
-	PrintTable(Deus.Orion.Bans)
+	--PrintTable(Deus.Orion.Bans)
 
 end
 
@@ -74,17 +74,15 @@ function Deus.Orion.chkbn(steamid64, ip, password, clpassword, name)
 
 	-- Feed Bandata into variable.
 	local bdat = Deus.Orion.Bans[steamid]
-
-	print(bdat)
 	-- Is the variable valid?
 	if not bdat then return end
 	if not bdat["banner"] and not bdat["baninfo"] then return end
-	print(1)
+	print("[DEUS] BANNED USER TRYING TO JOIN!")
+	print("---------------------------------------------------")
+	PrintTable(bdat)
+	print("---------------------------------------------------")
 	-- Returning false and thus returning you to menu. Hey hey, Goodbye!
 	local message = "[DEUS] Banned " .. bdat["baninfo"]["when"] .. " by " .. bdat["banner"]["name"] .. " (" .. bdat["banner"]["ID"] .. ").\n\nReason:\n" .. bdat["baninfo"]["reason"]
 	return false, message
 
 end
-
--- Add Ban Hook.
-hook.Add("CheckPassword", "DEUS.ORION.BANCHECKER", Deus.Orion.chkbn, HOOK_LOW)

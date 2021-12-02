@@ -6,6 +6,7 @@
 Deus.AddCommand("core", "refresh", "Refreshes Deus", function(ply, cmd, args)
 	if !ply:IsValid() then ply = Deus.Console end
 	if !ply:IsDeus() then return end
+	Deusprint(ply, "re-initialized deus.", Deus.DummyPly)
 	Deus.Init()
 end)
 

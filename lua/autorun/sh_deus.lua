@@ -20,6 +20,7 @@ if SERVER then
 	-- Set up Table
 	Deus = {...}
 	Deus.Console = {...}
+	Deus.DummyPly = {...}
 	Deus.Commands = {}
 	Deus.Admins = {}
 	Deus.Modlist = file.Find("deus/modules/*", "LUA")
@@ -35,6 +36,16 @@ if SERVER then
 		return true
 	end
 
+	-- Fallback DummyPly
+	function Deus.DummyPly:Nick()
+		return ""
+	end
+	function Deus.DummyPly:SteamID()
+		return ""
+	end
+	function Deus.DummyPly:IsDeus()
+		return false
+	end
 	-- Logger Stage 1
 	function Deusprint(tPly, tAct, tTarget)
 		-- Build LogData Table
@@ -180,6 +191,7 @@ if SERVER then
 		Deus.ConstructModules()
 		Deus.Populate()
 		Deus.Orion.Refresh()
+		hook.Add("CheckPassword", "DEUS.ORION.BANCHECKER", Deus.Orion.chkbn, HOOK_LOW)
 	end
 
 	-- Case o' Point
