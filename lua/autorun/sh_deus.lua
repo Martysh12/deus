@@ -9,21 +9,58 @@
 ---		that way it is evident what is secured on the server	  --
 ---		and what is not.										  --
 ------------------------------------------------------------------*/
+ADAM 	= 		SERVER
+EVE 	= 		CLIENT
 
-if SERVER then
+
+-- Set up Table
+Deus = {...}
+
+Deus.Modlist = {}
+Deus.Modlist.EVE = file.Find("deus/modules/eve/*", "LUA")
+
+-- Construct EVE Modules
+function Deus.ConstructEVE()
+	if ADAM then
+		print("\n\n[DEUS] Adding [EVE] Modules...\n")
+		for _,v in pairs(Deus.Modlist.EVE) do
+			local ModuleName = v
+			print("- [" .. ModuleName .. "]")
+			AddCSLuaFile("deus/modules/eve/" .. ModuleName)
+		end
+	end
+	if EVE then
+		for _,v in pairs(Deus.Modlist.EVE) do
+			local ModuleName = v
+			include("deus/modules/eve/" .. ModuleName)
+		end
+	end
+end
+
+if ADAM then
 	-- Net MSGs
-	util.AddNetworkString("DeusPrint")
+	util.AddNetworkString("ToEVE_DeusPrint")
 
 	-- METATABLES
 	DeusMetaPly = FindMetaTable("Player")
 
-	-- Set up Table
-	Deus = {...}
+	-- Set up basic structure
 	Deus.Console = {...}
 	Deus.DummyPly = {...}
 	Deus.Commands = {}
 	Deus.Admins = {}
-	Deus.Modlist = file.Find("deus/modules/*", "LUA")
+	Deus.Modlist.ADAM = file.Find("deus/modules/adam/*", "LUA")
+
+
+	-- Construct ADAM Modules
+	function Deus.ConstructADAM()
+		print("\n\n[DEUS] Adding [ADAM] Modules...\n")
+		for _,v in pairs(Deus.Modlist.ADAM) do
+			local ModuleName = v
+			print("- [" .. ModuleName .. "]")
+			include("deus/modules/adam/" .. ModuleName)
+		end
+	end
 
 	-- Fallback Console Activator
 	function Deus.Console:Nick()
@@ -81,7 +118,7 @@ if SERVER then
 	-- Logger Stage 2
 	function DeusLog(tLogData)
 		-- Send NetMSG and Broadcast it
-		net.Start("DeusPrint")
+		net.Start("ToEVE_DeusPrint")
 			net.WriteEntity(tLogData.Activator)
 			net.WriteString(tLogData.Action)
 			if tLogData.Target != nil && tLogData.Target:SteamID() != nil then
@@ -116,16 +153,6 @@ if SERVER then
 		Deus.Commands[sCategory][sName] = {}
 		Deus.Commands[sCategory][sName]["1"] = sDesc
 		Deus.Commands[sCategory][sName]["2"] = funcCallback
-	end
-
-	-- Load Module List
-	function Deus.ConstructModules()
-		print("\n\n[DEUS] Adding Modules...\n")
-		for _,v in pairs(Deus.Modlist) do
-			local ModuleName = v
-			print("- [" .. ModuleName .. "]")
-			include("deus/modules/" .. ModuleName)
-		end
 	end
 
 	-- Populate commands ingame
@@ -183,50 +210,19 @@ if SERVER then
 			end
 		end
 	end
+end
 
-	-- Initialize Deus
-	function Deus.Init()
+-- Initialize Deus
+function Deus.Init()
+	-- Modules
+	Deus.ConstructEVE()
+	if ADAM then
+		Deus.ConstructADAM()
 		include("deus/core/ban.lua")
 		Deus.RefreshAdmins()
-		Deus.ConstructModules()
 		Deus.Populate()
 		Deus.Orion.Refresh()
 		hook.Add("CheckPassword", "DEUS.ORION.BANCHECKER", Deus.Orion.chkbn, HOOK_LOW)
 	end
-
-	-- Case o' Point
-	Deus.Init()
-
 end
-
-if CLIENT then
-
-	-- DeusPrint | Logs into Chat
-	net.Receive("DeusPrint",function()
-		local Activator = net.ReadEntity()
-		local Action = net.ReadString()
-		local Target = net.ReadString()
-
-		local _Activator
-		local _Target
-
-		if Activator:GetClass() != "worldspawn" then
-			_Activator = Activator:Nick()
-		else
-			_Activator = "CONSOLE"
-		end
-
-		if !player.GetBySteamID(Target) then
-			_Target = Target
-		else
-			_Target = player.GetBySteamID(Target):Nick()
-		end
-
-		DEUSCOLOR = Color(155,255,255)
-		DEUS_ACTIONCOLOR = Color(255,255,255)
-		DEUS_PLYCOLOR = Color(0,255,0)
-
-		chat.AddText(DEUSCOLOR,"[DEUS] ", DEUS_PLYCOLOR, _Activator .. " ", DEUS_ACTIONCOLOR, Action .. " ", DEUS_PLYCOLOR, _Target .. " ")
-	end)
-
-end
+Deus.Init()
